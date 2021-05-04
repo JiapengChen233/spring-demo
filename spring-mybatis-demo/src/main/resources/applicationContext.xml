@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- 引入外部配置文件 -->
+    <context:property-placeholder location="db.properties"/>
+
+    <!-- 创建一个数据源 -->
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${db.driverClass}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+    </bean>
+
+    <!-- 创建一个SQL会话工厂 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 指定mybatis配置文件 -->
+        <property name="configLocation" value="classpath:mybatis.cfg.xml"/>
+        <!-- 指定类型别名包 -->
+        <property name="typeAliasesPackage" value="com.cjp.domain"/>
+        <!-- 指定Mapper映射文件路径 -->
+        <property name="mapperLocations" value="classpath:com/cjp/dao/*.xml"/>
+    </bean>
+
+    <!-- 自动扫描接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定SQL会话工厂-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!-- 指定基础包，会自动扫描该包及其子包下所有的接口 -->
+        <property name="basePackage" value="com.cjp.dao"/>
+    </bean>
+
+</beans>

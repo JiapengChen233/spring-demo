@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 指定一个需要在配置中解析使用的外部属性文件 -->
+    <properties resource="db.properties"/>
+
+    <!-- 指定驱动的路径 -->
+    <classPathEntry location="D:\app\86158\product\11.2.0\dbhome_1\jdbc\lib\ojdbc6.jar"/>
+
+    <!-- 指定生成一组对象的环境 -->
+    <context id="MySQL" defaultModelType="flat" targetRuntime="MyBatis3">
+        <!-- 配置注释生成器 -->
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!-- 指定数据库连接属性 -->
+        <jdbcConnection driverClass="${db.driverClass}"
+                        connectionURL="${db.url}"
+                        userId="${db.username}"
+                        password="${db.password}"/>
+
+        <!-- 配置实体类生成器 -->
+        <javaModelGenerator targetPackage="com.cjp.domain" targetProject="src\main\java">
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 配置映射文件生成器 -->
+        <sqlMapGenerator targetPackage="com.cjp.dao" targetProject="src\main\resources"/>
+
+        <!-- 配置Mapper接口生成器 -->
+        <javaClientGenerator targetPackage="com.cjp.dao" targetProject="src\main\java" type="XMLMAPPER"/>
+
+        <!-- 指定要生成对应的实体类和其他文件的表 -->
+        <table tableName="t_user" domainObjectName="User"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+    </context>
+</generatorConfiguration>
