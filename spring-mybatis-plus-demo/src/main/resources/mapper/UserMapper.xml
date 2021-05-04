@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjp.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.cjp.entity.User">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="SEX" jdbcType="VARCHAR" property="sex"/>
+        <result column="AGE" jdbcType="DECIMAL" property="age"/>
+        <result column="ID_CARD" jdbcType="VARCHAR" property="idCard"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID
+        , NAME, SEX, AGE, ID_CARD, ADDRESS
+    </sql>
+
+    <!-- select by table column name -->
+    <select id="findByColumn" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from t_user
+        where ${column} =#{value}
+    </select>
+
+    <!-- insert batch -->
+    <insert id="insertBatch" parameterType="List">
+        insert into T_USER (ID, NAME, SEX, AGE, ID_CARD, ADDRESS)
+        <foreach collection="list" item="user" index="index" separator="union all">
+            select
+            <trim suffixOverrides=",">
+                GET_SEQ_NEXT('SEQ_T_USER_ID'),
+                <choose>
+                    <when test="user.name == null">
+                        '',
+                    </when>
+                    <otherwise>
+                        #{user.name},
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="user.sex == null">
+                        '',
+                    </when>
+                    <otherwise>
+                        #{user.sex},
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="user.age == null">
+                        '',
+                    </when>
+                    <otherwise>
+                        #{user.age},
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="user.idCard == null">
+                        '',
+                    </when>
+                    <otherwise>
+                        #{user.idCard},
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="user.address == null">
+                        '',
+                    </when>
+                    <otherwise>
+                        #{user.address},
+                    </otherwise>
+                </choose>
+            </trim>
+            from dual
+        </foreach>
+    </insert>
+
+</mapper>
